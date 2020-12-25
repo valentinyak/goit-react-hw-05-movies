@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import s from './MoviesPage.module.css';
 
 export default function MoviesPage() {
   return;

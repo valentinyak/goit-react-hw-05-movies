@@ -30,3 +30,22 @@ img {
   max-width: 100%;
   height: auto;
 }
+
+p {
+  font-weight: 700;
+}
+
+.details-container {
+  display: flex;
+  margin-top: 10px;
+
+  box-shadow: 0px 5px #d3d3d3;
+}
+
+.movie-info {
+  margin-left: 15px;
+}
+
+.overview {
+  font-weight: 400;
+}
