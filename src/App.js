@@ -2,101 +2,73 @@ import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import Loader from 'react-loader-spinner';
 
-import Searchbar from './components/Searchbar/Searchbar';
-import ImageGallery from './components/ImageGallery/ImageGallery';
-import Button from './components/Button/Button';
-import Modal from './components/Modal/Modal';
-import pixabayAPI from './services/pixabay-api';
+import theMovieAPI from './services/theMovieDB-api';
 
 import s from './App.module.css';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
 export default function App() {
-  const [serchQuery, setSerchQuery] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [images, setImages] = useState([]);
+  const [films, setFilms] = useState([]);
   const [error, setError] = useState(null);
-  const [status, setStatus] = useState('idle');
-  const [showModal, setShowModal] = useState(false);
-  const [openedImg, setOpenedImg] = useState(null);
-  const [totalImages, setTotalImages] = useState(0);
+  const [query, setQuery] = useState('alone');
 
   useEffect(() => {
-    if (serchQuery !== '' && status === 'idle') {
-      setStatus('pending');
-      makeFetch();
-    }
+    // if (films.length < 80) {
+    //   makeFetchForTrending();
+    // }
+    // findForMovies(query);
+    // makeFetchForMovieDetails(120);
+    // makeFetchForMovieCredits(120);
+    // makeFetchForMovieReviews(120);
+  });
 
-    if (images.length === 0 && status === 'resolved') {
-      toast.info(`По запросу '${serchQuery}' ничего не найдено`);
-    }
-  }, [images.length, status, serchQuery]);
-
-  const handleFormSubmit = serchQuery => {
-    setSerchQuery(serchQuery);
-    setStatus('idle');
-    setImages([]);
-    setCurrentPage(1);
-    setTotalImages(0);
-  };
-
-  const handleBtnClick = () => {
-    setStatus('pending');
-    makeFetch();
-  };
-
-  const handleImgClick = e => {
-    const largeImg = e.currentTarget.alt;
-
-    setShowModal(showModal => !showModal);
-    setOpenedImg(largeImg);
-  };
-
-  const handleOverleyClick = e => {
-    if (e.target.nodeName !== 'IMG') {
-      setShowModal(showModal => !showModal);
-    }
-  };
-
-  const makeFetch = () => {
-    pixabayAPI
-      .fetchImages(serchQuery, currentPage)
-      .then(parsedResponse => {
-        setImages([...images, ...parsedResponse.hits]);
-        setCurrentPage(currentPage + 1);
-        setTotalImages(parsedResponse.total);
-      })
-      .then(() => {
-        setStatus('resolved');
-        window.scrollTo({
-          top: document.documentElement.scrollHeight,
-          behavior: 'smooth',
-        });
-      })
+  const makeFetchForMovieReviews = id => {
+    theMovieAPI
+      .getMovieReviews(id)
+      .then(console.log)
       .catch(error => {
         setError(error);
-        setStatus('rejected');
       });
   };
 
-  return (
-    <div className={s.App}>
-      <ToastContainer autoClose={3000} />
-      <Searchbar onSubmit={handleFormSubmit} />
-      <ImageGallery images={images} onClick={handleImgClick} />
+  const makeFetchForMovieCredits = id => {
+    theMovieAPI
+      .getMovieCredits(id)
+      .then(console.log)
+      .catch(error => {
+        setError(error);
+      });
+  };
 
-      {status === 'pending' && (
-        <Loader type="ThreeDots" color="#00BFFF" height={100} width={100} />
-      )}
+  const makeFetchForMovieDetails = id => {
+    theMovieAPI
+      .getMovieDetails(id)
+      .then(console.log)
+      .catch(error => {
+        setError(error);
+      });
+  };
 
-      {images.length > 0 && images.length < totalImages && (
-        <Button onClick={handleBtnClick} />
-      )}
+  const findForMovies = query => {
+    theMovieAPI
+      .serchMovies(query)
+      .then(console.log)
+      .catch(error => {
+        setError(error);
+      });
+  };
 
-      {status === 'rejected' && <div>{error}</div>}
+  const makeFetchForTrending = () => {
+    theMovieAPI
+      .getTrending()
+      .then(parsedResponse => {
+        setFilms([...films, ...parsedResponse.results]);
+      })
+      .catch(error => {
+        setError(error);
+      });
+  };
 
-      {showModal && <Modal largeImg={openedImg} onClick={handleOverleyClick} />}
-    </div>
-  );
+  return <div className={s.App}></div>;
 }
