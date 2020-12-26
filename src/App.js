@@ -28,24 +28,6 @@ export default function App() {
   // makeFetchForMovieReviews(120);
   // });
 
-  // const makeFetchForMovieReviews = id => {
-  //   theMovieAPI
-  //     .getMovieReviews(id)
-  //     .then(console.log)
-  //     .catch(error => {
-  //       setError(error);
-  //     });
-  // };
-
-  // const makeFetchForMovieCredits = id => {
-  //   theMovieAPI
-  //     .getMovieCredits(id)
-  //     .then(console.log)
-  //     .catch(error => {
-  //       setError(error);
-  //     });
-  // };
-
   // const findForMovies = query => {
   //   theMovieAPI
   //     .serchMovies(query)
@@ -63,21 +45,17 @@ export default function App() {
           <HomePage />
         </Route>
 
-        {/* <Route>
-          <MoviesPage path="/movies" />
-        </Route> */}
+        <Route path="/movies" exact>
+          <MoviesPage />
+        </Route>
 
         <Route path="/movies/:movieId">
           <MovieDetailsPage />
         </Route>
 
-        {/* <Route>
-          <Cast path="/movies/:movieId/cast" />
-        </Route> */}
-
-        {/* <Route>
-          <Reviews path="/movies/:movieId/reviews" />
-        </Route> */}
+        <Route>
+          <HomePage />
+        </Route>
       </Switch>
     </>
   );

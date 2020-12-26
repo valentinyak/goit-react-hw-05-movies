@@ -14,7 +14,7 @@ function getTrending(mediaType = 'movie', mediaWindow = 'day') {
 }
 
 function serchMovies(query) {
-  return fetch(`${BASE_URL}search/movie/?api_key=${KEY}&query=${query}`)
+  return fetch(`${BASE_URL}search/movie?api_key=${KEY}&query=${query}`)
     .then(response => {
       if (response.ok) {
         return response.json();

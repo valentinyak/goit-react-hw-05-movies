@@ -3,7 +3,7 @@ export default function Button({ history }) {
     <button
       type="button"
       onClick={() => {
-        history.goBack();
+        history.push('/');
       }}
     >
       {String.fromCharCode(8592)} Go back

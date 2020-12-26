@@ -35,9 +35,14 @@ p {
   font-weight: 700;
 }
 
+li {
+  list-style: none;
+}
+
 .details-container {
   display: flex;
   margin-top: 10px;
+  padding-bottom: 10px;
 
   box-shadow: 0px 5px #d3d3d3;
 }
@@ -48,4 +53,27 @@ p {
 
 .overview {
   font-weight: 400;
+}
+
+.genres-container {
+  display: flex;
+  margin-right: 10px;
+}
+
+.genres-title {
+  margin-right: 10px;
+}
+
+.genres-list {
+  display: flex;
+  padding: 0px;
+}
+.genres-list > li:not(:last-child) {
+  margin-right: 7px;
+}
+
+.add-info-container {
+  padding-bottom: 10px;
+
+  box-shadow: 0px 5px #d3d3d3;
 }
