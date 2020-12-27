@@ -1,62 +1,40 @@
-import { Switch, Route } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import Navigation from './components/Navigation/Navigation';
-import Cast from './views/Cast';
+import Spiner from './components/Spiner/Spiner';
 import HomePage from './views/HomePage';
-import MovieDetailsPage from './views/MovieDetailsPage';
-import MoviesPage from './views/MoviesPage';
-import Reviews from './views/Reviews';
 
-import theMovieAPI from './services/theMovieDB-api';
-// import { ToastContainer, toast } from 'react-toastify';
-// import Loader from 'react-loader-spinner';
-
-// import 'react-toastify/dist/ReactToastify.css';
-// import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
+const MovieDetailsPage = lazy(() =>
+  import(
+    './views/MovieDetailsPage.js' /* webpackChunkName: "MovieDetailsPage-view" */
+  ),
+);
+const MoviesPage = lazy(() =>
+  import('./views/MoviesPage.js' /* webpackChunkName: "MoviesPage-view" */),
+);
 
 export default function App() {
-  // const [films, setFilms] = useState([]);
-  // const [error, setError] = useState(null);
-  // const [query, setQuery] = useState('alone');
-
-  // useEffect(() => {
-  // if (films.length < 80) {
-  //   makeFetchForTrending();
-  // }
-  // findForMovies(query);
-  // makeFetchForMovieDetails(120);
-  // makeFetchForMovieCredits(120);
-  // makeFetchForMovieReviews(120);
-  // });
-
-  // const findForMovies = query => {
-  //   theMovieAPI
-  //     .serchMovies(query)
-  //     .then(console.log)
-  //     .catch(error => {
-  //       setError(error);
-  //     });
-  // };
-
   return (
     <>
       <Navigation />
-      <Switch>
-        <Route path="/" exact>
-          <HomePage />
-        </Route>
 
-        <Route path="/movies" exact>
-          <MoviesPage />
-        </Route>
+      <Suspense fallback={<Spiner />}>
+        <Switch>
+          <Route path="/" exact>
+            <HomePage />
+          </Route>
 
-        <Route path="/movies/:movieId">
-          <MovieDetailsPage />
-        </Route>
+          <Route path="/movies" exact>
+            <MoviesPage />
+          </Route>
 
-        <Route>
-          <HomePage />
-        </Route>
-      </Switch>
+          <Route path="/movies/:movieId">
+            <MovieDetailsPage />
+          </Route>
+
+          <Redirect to="/" />
+        </Switch>
+      </Suspense>
     </>
   );
 }

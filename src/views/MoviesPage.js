@@ -1,81 +1,56 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useRouteMatch, useHistory, useLocation } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { useLocation } from 'react-router-dom';
+
 import theMovieAPI from '../services/theMovieDB-api';
+import FilmList from '../components/Film/FilmList';
+import SerchForm from '../components/SerchForm/SerchForm';
+import Error from '../components/Error/Error';
+import Spiner from '../components/Spiner/Spiner';
 
 export default function MoviesPage() {
-  const [findFilms, setFindFilms] = useState(null);
-  const [emptyArray, setEmptyArray] = useState(false);
-  const { url } = useRouteMatch();
+  const [findFilms, setFindFilms] = useState([]);
+  const [status, setStatus] = useState('idle');
+  const [error, setError] = useState(null);
   const location = useLocation();
-  const history = useHistory();
 
   useEffect(() => {
-    if (findFilms) {
-      return;
-    }
-
     if (location.search) {
+      setStatus('pending');
+
       findForMovies(new URLSearchParams(location.search).get('query'));
     }
   }, [location.search]);
 
-  const handleBtnClick = e => {
-    e.preventDefault();
-
-    // findForMovies(e.target.form.findInput.value);
-
-    history.push({
-      ...location,
-      search: `query=${e.target.form.findInput.value}`,
-    });
-  };
-
   const findForMovies = query => {
-    theMovieAPI.serchMovies(query).then(({ results }) => {
-      setFindFilms(results);
-      setEmptyArray(false);
-
-      if (results.length === 0) {
-        setEmptyArray(true);
-      }
-    });
+    theMovieAPI
+      .serchMovies(query)
+      .then(({ results }) => {
+        setFindFilms(results);
+      })
+      .then(() => {
+        setStatus('resolved');
+      })
+      .catch(error => {
+        setError(error);
+        setStatus('rejected');
+      });
   };
 
   return (
     <main>
-      <form action="">
-        <label htmlFor="">
-          <input type="text" name="findInput" id="" />
-          <button type="submit" onClick={handleBtnClick}>
-            Search
-          </button>
-        </label>
-      </form>
+      <SerchForm />
 
-      {findFilms && (
-        <ul>
-          {findFilms.map(film => {
-            return (
-              <li key={film.id}>
-                <Link to={`${url}/${film.id}`}>{film.title}</Link>
-              </li>
-            );
-          })}
-        </ul>
+      {status === 'pending' && <Spiner />}
+
+      {status === 'resolved' && findFilms.length > 0 && (
+        <FilmList films={findFilms} />
       )}
-      {emptyArray && <p>We can't find films by your request</p>}
+
+      {status === 'resolved' && findFilms.length === 0 && (
+        <h2>We can't find films by your request</h2>
+      )}
+
+      {status === 'rejected' && <Error error={error} />}
     </main>
   );
 }
-
-// ImageGallery.propTypes = {
-//   images: PropTypes.arrayOf(
-//     PropTypes.shape({
-//       id: PropTypes.number,
-//       webformatURL: PropTypes.string,
-//       largeImageURL: PropTypes.string,
-//     }),
-//   ).isRequired,
-//   onClick: PropTypes.func,
-// };

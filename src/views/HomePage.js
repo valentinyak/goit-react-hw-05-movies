@@ -1,35 +1,49 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
+
 import theMovieAPI from '../services/theMovieDB-api';
+import FilmList from '../components/Film/FilmList';
+import Error from '../components/Error/Error';
+import Spiner from '../components/Spiner/Spiner';
 
 export default function HomePage() {
-  const [trendingFilms, setTrendingFilms] = useState([]);
+  const [trendingFilms, setTrendingFilms] = useState(null);
+  const [status, setStatus] = useState('idle');
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (trendingFilms.length === 0) {
-      theMovieAPI.getTrending().then(parsedResponse => {
-        setTrendingFilms([...trendingFilms, ...parsedResponse.results]);
-      });
+    setStatus('pending');
+
+    if (!trendingFilms) {
+      theMovieAPI
+        .getTrending()
+        .then(parsedResponse => {
+          setTrendingFilms(parsedResponse.results);
+        })
+        .catch(error => {
+          setError(error);
+          setStatus('rejected');
+        });
     }
-  });
+
+    if (trendingFilms) {
+      setStatus('resolved');
+    }
+  }, [trendingFilms]);
 
   return (
     <main>
-      <h1 style={{ fontSize: '20px', marginLeft: '20px' }}>Trending today</h1>
-      <ul>
-        {trendingFilms.map(film => {
-          return (
-            <li key={film.id}>
-              <Link to={`movies/${film.id}`}>{film.title}</Link>
-            </li>
-          );
-        })}
-      </ul>
+      {status === 'pending' && <Spiner />}
+
+      {status === 'resolved' && (
+        <>
+          <h1 style={{ fontSize: '20px', marginLeft: '20px' }}>
+            Trending today
+          </h1>
+          <FilmList films={trendingFilms} />
+        </>
+      )}
+
+      {status === 'rejected' && <Error error={error} />}
     </main>
   );
 }
-
-// Button.propTypes = {
-//   onClick: PropTypes.func,
-// };
