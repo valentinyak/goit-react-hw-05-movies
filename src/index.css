@@ -47,6 +47,26 @@ li {
   box-shadow: 0px 5px #d3d3d3;
 }
 
+.film-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: -15px;
+}
+
+.film-list > li {
+  width: 300px;
+  height: 500px;
+  margin: 15px;
+}
+
+.filt-title {
+  height: 50px;
+  margin: 0px;
+
+  text-align: center;
+}
+
 .movie-info {
   margin-left: 15px;
 }

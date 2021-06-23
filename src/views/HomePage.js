@@ -36,7 +36,12 @@ export default function HomePage() {
 
       {status === 'resolved' && (
         <>
-          <h1 style={{ fontSize: '20px', marginLeft: '20px' }}>
+          <h1
+            style={{
+              fontSize: '30px',
+              textAlign: 'center',
+            }}
+          >
             Trending today
           </h1>
           <FilmList films={trendingFilms} />

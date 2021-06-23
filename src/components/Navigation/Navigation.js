@@ -6,11 +6,11 @@ export default function Navigation() {
     <header>
       <nav>
         <NavLink exact to="/" className={s.link} activeClassName={s.activeLink}>
-          Home
+          Trending
         </NavLink>
 
         <NavLink to="/movies" className={s.link} activeClassName={s.activeLink}>
-          Movies
+          Find movies
         </NavLink>
       </nav>
     </header>

@@ -20,7 +20,16 @@ export default function FilmItem({ film }) {
           state: { from: from },
         }}
       >
-        {film.title}
+        <h3 className="filt-title">{film.title}</h3>
+
+        <img
+          src={
+            film.poster_path
+              ? `http://image.tmdb.org/t/p/w300_and_h450_bestv2${film.poster_path}`
+              : 'https://www.ruprom.ru/templates/images/newdesign/noimage2.png'
+          }
+          alt={`${film.title}`}
+        />
       </Link>
     </li>
   );

@@ -3,7 +3,7 @@ import FilmItem from './FilmItem';
 
 export default function FilmList({ films }) {
   return (
-    <ul>
+    <ul className="film-list">
       {films.map(film => {
         return <FilmItem film={film} key={film.id} />;
       })}
